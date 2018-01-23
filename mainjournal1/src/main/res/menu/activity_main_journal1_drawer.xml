@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/tape_expenditure"
+            android:icon="@drawable/ic_tape_expediture_24dp"
+            android:title="@string/tapeExpenditure" />
+        <item
+            android:id="@+id/buget"
+            android:icon="@drawable/ic_buget_24dp"
+            android:title="@string/buget_item" />
+        <item
+            android:id="@+id/journal_expenditure"
+            android:icon="@drawable/ic_journal_expediture_24dp"
+            android:title="@string/journalExpenditure_item" />
+        <item
+            android:id="@+id/category"
+            android:icon="@drawable/ic_filter_8_black_24dp"
+            android:title="@string/category_item" />
+        <item
+            android:id="@+id/history"
+            android:icon="@drawable/ic_histoy_24dp"
+            android:title="@string/history_item" />
+
+    </group>
+
+    <item android:title="@string/additionally">
+        <menu>
+            <item
+                android:id="@+id/about_app"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/aboutApp_item" />
+        </menu>
+    </item>
+
+</menu>

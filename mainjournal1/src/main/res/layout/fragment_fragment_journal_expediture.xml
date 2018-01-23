@@ -1,0 +1,156 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dn_evtukhova.mainjournal1.fragments.FragmentJournalExpediture">
+
+
+
+        <!-- TODO: Update blank fragment layout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/journal_expediture_text1" />
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+                <TextView
+                    android:id="@+id/textViewDateJournal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" "
+                    android:textSize="28sp"/>
+
+                <Spinner
+                    android:id="@+id/spinnerJournal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minWidth="25dp"
+                    android:spinnerMode="dialog"
+                    android:visibility="visible" />
+
+        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textViewCategoryJournal"
+                            android:layout_width="28dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@string/tape_expediture_category"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textViewCategoryPlan"
+                            android:layout_width="28dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:text="@string/tape_exprditure_plan"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textViewCategoryFact"
+                            android:layout_width="28dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:text="@string/tape_expediture_fact"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="28dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Бытовая химия"
+                            android:id="@+id/textViewCategoryJournal2"/>
+
+                        <TextView
+                            android:layout_width="28dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"            android:gravity="right"
+                            android:text="1500"
+                            android:id="@+id/textViewCategoryPlan2"/>
+
+                        <TextView
+                            android:layout_width="28dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"            android:gravity="right"
+                            android:text="849.5"
+                            android:layout_gravity="left"
+                            android:id="@+id/textViewCategoryFact2"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="28dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Прочие расходы"
+                            android:id="@+id/textViewCategoryJournal1"/>
+
+                        <TextView
+                            android:layout_width="28dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"            android:gravity="right"
+                            android:text="5000"
+                            android:id="@+id/textViewCategoryPlan1"/>
+
+                        <TextView
+                            android:layout_width="28dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"            android:gravity="right"
+                            android:text="682"
+                            android:layout_gravity="left"
+                            android:id="@+id/textViewCategoryFact1"/>
+                </LinearLayout>
+
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+
+                </ListView>
+                <Button
+                    android:id="@+id/buttonJournal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tape_expediture_button"
+                    android:layout_gravity="right"/>
+
+
+
+        </LinearLayout>
+
+</FrameLayout>

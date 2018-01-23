@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Планирование бюджета</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+    <string name="action_settings">Настройки</string>
+    <string name="tapeExpenditure">Лента расходов</string>
+    <string name="buget_item">Бюжет</string>
+    <string name="journalExpenditure_item">Журнал расходов</string>
+    <string name="history_item">История</string>
+    <string name="additionally">Дополнительно</string>
+    <string name="aboutApp_item">О приложении</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="blank_fragment_tape_expediture">Лента расходов</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="blank_fragment_buget">Бюджет на месяц</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="blank_fragment_journal_expediture">Журнал расходов</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="blank_fragment_history">История</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="blank_fragment_about_app">
+        Данное приложение предназначено для учета расходов.Чтоб научиться экономить нужно грамотно планировать свои расходы. Приложение "Планирование расходов" поможет вам это сделать. Для начала следует сформировать бюджет, т.е. определить сумму, которую вы планируете потратить ежемесячно.
+        Суть приложения состоит в том, что оно не учитывает ваш доход, а затем сравнивает с расходом. Здесь вы сами определяете сумму ежемесячных трат, которая может быть меньше дохода или равна доходу, это не важно. Запишите ее в поле Бюджет на месяц. Автоматически вам будет рассчитан годовой, ежедневный и еженедельный бюджеты. Затем выберете категории, распределите ваш бюджет по категориям. В журнале расходов добавляйте текущие расходы, в истории расходов смотрите диаграмму расходов. Выделяйте узкие места о тем категория, по которым расходы выходят за рамки установленного бюджета.
+        Желаем удачи в планировании расходов!</string>
+
+
+    <string name="history_item1">История моя</string>
+    <string name="activity_history">История</string>
+    <string name="buget_on_mounth">Бюджет на месяц</string>
+    <string name="buget_year">Бюджет на год</string>
+    <string name="buget_week">Бюджет на неделю</string>
+    <string name="buget_day">Бюджет на день</string>
+    <string name="button_buget">Распределить бюджет по категориям</string>
+    <string name="tape_expediture_category">Категория</string>
+    <string name="tape_expediture_fact">Факт</string>
+    <string name="tape_exprditure_plan">План</string>
+    <string name="tape_expediture_button">Добавить расход</string>
+    <string name="journal_expediture_text1">Журнал расходов</string>
+    <string name="category_item">Категории</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="fragment_string_category">Категории</string>
+    <string name="add_category">Добавить категорию</string>
+    <string name="activity_add_category_entre_name">Введите наименование категории</string>
+    <string name="activity_add_category_add_category">Добавить категорию</string>
+    <string name="add_enter_expediture_hint">Введите сумму расхода</string>
+    <string name="button_add_expediture">Добавить расход</string>
+    <string name="add_expediture_text_up">Добавление расхода</string>
+    <string name="add_enter_expediture_hint1">Введите сумму расхода</string>
+    <string name="dutton_add_expediture_date">Выбрать дату</string>
+
+
+</resources>

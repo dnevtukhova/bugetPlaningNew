@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dn_evtukhova.mainjournal1.AddCategoryActivity">
+
+
+    <EditText
+        android:id="@+id/editTextAddCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="20"
+        android:inputType="textPersonName"
+        android:hint="@string/activity_add_category_entre_name"/>
+
+    <Button
+        android:id="@+id/buttonViewAddCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="419dp"
+        android:layout_marginTop="74dp"
+        android:text="@string/activity_add_category_add_category"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@+id/buttonLocBd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Вывести лог"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

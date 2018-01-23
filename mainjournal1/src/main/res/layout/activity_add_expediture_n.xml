@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dn_evtukhova.mainjournal1.ActivityAddExpediture">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewAddExpediture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_expediture_text_up" />
+
+        <Spinner
+            android:id="@+id/spinnerAddExpediture"
+            style="@style/Platform.Widget.AppCompat.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:popupBackground="@android:color/holo_green_light" />
+
+        <EditText
+            android:id="@+id/editTextAddExpediture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:hint="@string/add_enter_expediture_hint"/>
+
+
+        <Button
+            android:id="@+id/buttonAddExpeditureDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dutton_add_expediture_date" />
+
+        <Button
+            android:id="@+id/buttonViewAddExpediture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_add_expediture"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
