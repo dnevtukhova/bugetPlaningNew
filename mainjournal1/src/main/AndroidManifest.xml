@@ -30,6 +30,13 @@
         </activity>
         <activity android:name=".AddCategoryActivity" />
         <activity android:name=".ActivityAddExpediture"></activity>
+
+        <provider
+            android:name=".db.BugetPlaningProvider"
+            android:exported="true"
+            android:authorities="com.dn_evtukhova.mainjournal1"/>
+
     </application>
+
 
 </manifest>
