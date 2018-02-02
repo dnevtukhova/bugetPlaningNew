@@ -11,6 +11,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 
@@ -28,7 +29,9 @@ import android.widget.ListView;
 
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract;
 import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract.Categories;
 import com.dn_evtukhova.mainjournal1.db.BugetPlaningDBHelper;
 
@@ -38,10 +41,12 @@ public class ActivityAddExpediture extends AppCompatActivity implements LoaderMa
     Spinner spinnerAddExpediture;
     DBHelper DBAddExp;
     SimpleCursorAdapter spinAdapter;
+    TextView currentDateExpediture;
+    TextView sumExpediture;
 
 
     final String LOG_TAG = "myLogs"; //для контроля заполнения БД
-    Button mbtn;
+    Button buttonAddExpediture;
     BugetPlaningDBHelper mdb;
 
 
@@ -49,8 +54,10 @@ public class ActivityAddExpediture extends AppCompatActivity implements LoaderMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expediture_n);
-        mbtn = (Button)findViewById(R.id.buttonViewAddExpediture);
-        mbtn.setOnClickListener(this);
+
+        buttonAddExpediture = (Button)findViewById(R.id.buttonViewAddExpediture);
+        //устанавливаем слушатель на кнопку
+        buttonAddExpediture.setOnClickListener(this);
 
         mdb = new BugetPlaningDBHelper(this); //для теста, заполнилась бд или нет при создании
 
@@ -76,6 +83,17 @@ public class ActivityAddExpediture extends AppCompatActivity implements LoaderMa
 
         // создаем лоадер для чтения данных
         this.getLoaderManager().initLoader(0, null, this);
+
+        //настраиваем отображение текущей даты
+        currentDateExpediture = (TextView)findViewById(R.id.addExpeditureCurrentDate);
+        long date = System.currentTimeMillis();
+
+        SimpleDateFormat dfDate_day= new SimpleDateFormat("dd/MM/yyyy");
+
+        String dateString=dfDate_day.format(date);
+        currentDateExpediture.setText(dateString);
+
+        sumExpediture = (TextView)findViewById(R.id.editTextAddExpediture);
 
     }
 
@@ -116,31 +134,44 @@ public class ActivityAddExpediture extends AppCompatActivity implements LoaderMa
     public void onClick(View v) {
         // создаем объект для данных
         ContentValues cv = new ContentValues();
+        String categName = spinAdapter.getCursor().getString(0);
+        String sumExp =sumExpediture.getText().toString();
+        String date = currentDateExpediture.getText().toString();
+
 
         // подключаемся к БД
         SQLiteDatabase db = mdb.getWritableDatabase();
 
         switch (v.getId()) {
             case R.id.buttonViewAddExpediture:
-                Log.d(LOG_TAG, "--- Rows in mytable: ---");
+               cv.put(BugetPlaningContract.Consumption.COLUMN_CATEGORY_ID, categName);
+
+                cv.put(BugetPlaningContract.Consumption.COLUMN_CONSUMPTION_AMOUNT, sumExp);
+                cv.put(BugetPlaningContract.Consumption.COLUMN_CONSUMPTION_DATE, date);
+                Uri newUri = getContentResolver().insert(BugetPlaningContract.Consumption.CONTENT_URI, cv);
+                Log.d(LOG_TAG, "insert, result Uri : " + newUri.toString());
+               Log.d(LOG_TAG, "--- Rows in mytable: ---");
                 // делаем запрос всех данных из таблицы mytable, получаем Cursor
-                Cursor c = db.query(Categories.TABLE_NAME, null, null, null, null, null, null);
+                Cursor c = db.query(BugetPlaningContract.Consumption.TABLE_NAME, null, null, null, null, null, null);
 
                 // ставим позицию курсора на первую строку выборки
                 // если в выборке нет строк, вернется false
                 if (c.moveToFirst()) {
 
                     // определяем номера столбцов по имени в выборке
-                    int idColIndex = c.getColumnIndex(Categories._ID);
-                    int nameColIndex = c.getColumnIndex(Categories.COLUMN_CATEGORY_NAME);
-                    int emailColIndex = c.getColumnIndex(Categories.COLUMN_CATEGORY_IMG);
+                    int idColIndex = c.getColumnIndex(BugetPlaningContract.Consumption._ID);
+                    int nameColIndex = c.getColumnIndex(BugetPlaningContract.Consumption.COLUMN_CATEGORY_ID);
+                    int emailColIndex = c.getColumnIndex(BugetPlaningContract.Consumption.COLUMN_CONSUMPTION_AMOUNT);
+                    int emailColIndex1 = c.getColumnIndex(BugetPlaningContract.Consumption.COLUMN_CONSUMPTION_DATE);
+
 
                     do {
                         // получаем значения по номерам столбцов и пишем все в лог
                         Log.d(LOG_TAG,
                                 "ID = " + c.getInt(idColIndex) +
-                                        ", name = " + c.getString(nameColIndex) +
-                                        ", email = " + c.getString(emailColIndex));
+                                        ", id_cat = " + c.getString(nameColIndex) +
+                                        ", amount = " + c.getString(emailColIndex) +
+                                        ", date = " + c.getString(emailColIndex1));
                         // переход на следующую строку
                         // а если следующей нет (текущая - последняя), то false - выходим из цикла
                     } while (c.moveToNext());

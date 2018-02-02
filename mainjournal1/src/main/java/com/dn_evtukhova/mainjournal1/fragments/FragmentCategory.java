@@ -1,8 +1,8 @@
 package com.dn_evtukhova.mainjournal1.fragments;
 
 
-import android.content.Context;
-
+import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.Intent;
 
 import android.database.Cursor;
@@ -11,13 +11,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -27,6 +29,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import com.dn_evtukhova.mainjournal1.AddCategoryActivity;
 import com.dn_evtukhova.mainjournal1.DBHelper;
 import com.dn_evtukhova.mainjournal1.R;
+import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract;
 
 import static android.support.v4.app.LoaderManager.*;
 import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
@@ -39,11 +42,12 @@ import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
  * Use the {@link FragmentCategory#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentCategory extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FragmentCategory extends Fragment implements LoaderCallbacks<Cursor> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int CM_DELETE_ID = 1;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -95,6 +99,8 @@ public class FragmentCategory extends Fragment implements LoaderManager.LoaderCa
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View viewCategory = inflater.inflate(R.layout.fragment_category, container, false);
+
+       //при нажатии кнопки добавить категория открывается новая активити
         btnAddCategory = (Button)viewCategory.findViewById(R.id.buttonAddCategory);
         btnAddCategory.setOnClickListener(new View.OnClickListener() {
                                               @Override
@@ -104,12 +110,12 @@ public class FragmentCategory extends Fragment implements LoaderManager.LoaderCa
                                                   startActivity(intent);
                                               }
                                           });
-        // открываем подключение к БД
+        /*// открываем подключение к БД
             dbHelper = new DBHelper(getContext().getApplicationContext());
-            dbHelper.open();
+            dbHelper.open();*/
 
         // формируем столбцы сопоставления
-            String[] from = new String[] { DBHelper.KEY_IMG, DBHelper.KEY_NAME};
+            String[] from = new String[] { BugetPlaningContract.Categories.COLUMN_CATEGORY_IMG, BugetPlaningContract.Categories.COLUMN_CATEGORY_NAME};
             int[] to = new int[] { R.id.ivImgListCategories, R.id.tvTextListCategories };
 
             // создаем адаптер и настраиваем список
@@ -131,7 +137,10 @@ public class FragmentCategory extends Fragment implements LoaderManager.LoaderCa
         });
 
             // создаем лоадер для чтения данных
-            getActivity().getSupportLoaderManager().initLoader(0, null,(android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>) this);
+            getActivity().getSupportLoaderManager().initLoader(0, null, this);
+
+            // добавляем контекстное меню к списку
+        registerForContextMenu(listCategories);
 
 
         return viewCategory;
@@ -178,9 +187,36 @@ public class FragmentCategory extends Fragment implements LoaderManager.LoaderCa
     }
 
 
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == CM_DELETE_ID) {
+            // получаем из пункта контекстного меню данные по пункту списка
+            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            Uri uri = ContentUris.withAppendedId(BugetPlaningContract.Categories.CONTENT_URI, acmi.id);
+            int cnt = getActivity().getContentResolver().delete(uri, null, null);
+            Log.d(LOG_TAG, "delete, count = " + cnt);
+            return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(getActivity().getApplicationContext(), dbHelper);
+
+
+        return new CursorLoader(
+                getContext(),
+                BugetPlaningContract.Categories.CONTENT_URI,
+                BugetPlaningContract.Categories.DEFAULT_PROJECTION, null,
+                null,
+                null);
+
     }
 
     @Override
@@ -190,27 +226,8 @@ public class FragmentCategory extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        scAdapter.swapCursor(null);
     }
 
-    static class MyCursorLoader extends CursorLoader {
 
-        DBHelper db;
-
-        public MyCursorLoader(Context context, DBHelper db) {
-            super(context);
-            this.db = db;
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            Cursor cursor = db.getAllData();
-            /*try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-            return cursor;
-        }
-
-    }
 }

@@ -3,6 +3,7 @@ package com.dn_evtukhova.mainjournal1;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract;
+
 public class AddCategoryActivity extends AppCompatActivity implements View.OnClickListener {
     Button btnAddCategory, btnLog;
     EditText eTextCategory;
@@ -21,6 +24,8 @@ public class AddCategoryActivity extends AppCompatActivity implements View.OnCli
     SQLiteDatabase database;
     Cursor cursor;
     ListView lCategory;
+
+    final String LOG_TAG = "myLogs";
 
 
 
@@ -71,7 +76,14 @@ public class AddCategoryActivity extends AppCompatActivity implements View.OnCli
             case R.id.buttonViewAddCategory:
                 //Вносим значения в БД
 
-                dbHelper.addRec(categName, R.mipmap.ic_launcher);
+                ContentValues cv = new ContentValues();
+                cv.put(BugetPlaningContract.Categories.COLUMN_CATEGORY_NAME, categName);
+                cv.put(BugetPlaningContract.Categories.COLUMN_CATEGORY_IMG, R.mipmap.ic_launcher);
+                Uri newUri = getContentResolver().insert(BugetPlaningContract.Categories.CONTENT_URI, cv);
+                Log.d(LOG_TAG, "insert, result Uri : " + newUri.toString());
+
+
+               // dbHelper.addRec(categName, R.mipmap.ic_launcher);
 
                 break;
             case R.id.buttonLocBd:

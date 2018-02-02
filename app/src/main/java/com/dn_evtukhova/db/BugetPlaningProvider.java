@@ -1,4 +1,4 @@
-package com.dn_evtukhova.mainjournal1.db;
+package com.dn_evtukhova.db;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -11,13 +11,12 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract.Categories;
-import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract.Consumption;
-import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract.BugetOnCategory;
-import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract.BugetAll;
+import com.dn_evtukhova.db.BugetPlaningContract.BugetAll;
+import com.dn_evtukhova.db.BugetPlaningContract.BugetOnCategory;
+import com.dn_evtukhova.db.BugetPlaningContract.Categories;
+import com.dn_evtukhova.db.BugetPlaningContract.Consumption;
 
 import java.util.HashMap;
-
 
 /**
  * Created by 1 on 24.01.2018.
@@ -25,13 +24,13 @@ import java.util.HashMap;
 
 public class BugetPlaningProvider extends ContentProvider {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 1;
     private static HashMap<String, String> sCategoriesProjectionMap;
     private static HashMap<String, String> sConsumptionProjectionMap;
     private static HashMap<String, String> sBugetOnCategoryProjectionMap;
     private static HashMap<String, String> sBugetAllProjectionMap;
 
-//Для начала зададим константы, соответствующие возможным типам запроса к нашей БД:
+
     private static final int CATEGORIES = 101;
     private static final int CATEGORIES_ID = 102;
     private static final int CONSUMPTION = 103;
@@ -41,10 +40,9 @@ public class BugetPlaningProvider extends ContentProvider {
     private static final int BUGETALL = 107;
     private static final int BUGETALL_ID = 108;
 
-//Затем объявим переменную класса UriMatcher
     private static final UriMatcher sUriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
     static {
-//И в static блоке подготовим ее к использованию:
+
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "categories", CATEGORIES);
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "categories/#", CATEGORIES_ID);
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "consumption", CONSUMPTION);
@@ -54,8 +52,6 @@ public class BugetPlaningProvider extends ContentProvider {
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "bugetAll", BUGETALL);
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "bugetAll/#", BUGETALL_ID);
 
-        //Также нам необходимо задать проекции для выборки столбцов в запросе, они пригодятся нам в методе query():
-        //Для проекции по умолчанию мы возьмем весь список столбцов:
         sCategoriesProjectionMap = new HashMap<String, String>();
         for (int i = 0; i < BugetPlaningContract.Categories.DEFAULT_PROJECTION.length; i++) {
             sCategoriesProjectionMap.put(
@@ -84,9 +80,7 @@ public class BugetPlaningProvider extends ContentProvider {
 
 
      private BugetPlaningDBHelper bugetPlaningDbHelper;
-//onCreate() - инициализирует ContentProvider.
-// Провайдер будет создан как только вы обратитесь к нему с помощью ContentResolver'a
-//В методе onCreate() создадим наш DBHelper:
+
     @Override
     public boolean onCreate() {
 
@@ -94,7 +88,6 @@ public class BugetPlaningProvider extends ContentProvider {
         return true;
     }
 
-//query() - извлекает данные из БД, и возвращает их в виде Cursor
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
@@ -154,8 +147,6 @@ public class BugetPlaningProvider extends ContentProvider {
         return c;
     }
 
-    //getType() - возвращает MIME-тип для заданной content URI
-    //В реализации метода getType() мы просто будем возвращать тип данных из нашего ContractClass'a:
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
@@ -181,11 +172,9 @@ public class BugetPlaningProvider extends ContentProvider {
         }
     }
 
-    //insert() - добавляет новые данные в БД, возвращает uri новой записи
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues initialValues) {
-       //Добавлять строки можно только в таблицы, поэтому сделаем фильтр для тех Content Uri, которые не подходят:
         if (
                 sUriMatcher.match(uri) != CATEGORIES &&
                         sUriMatcher.match(uri) != CONSUMPTION &&
@@ -205,7 +194,6 @@ public class BugetPlaningProvider extends ContentProvider {
         }
         long rowId = -1;
         Uri rowUri = Uri.EMPTY;
-        //И определим в какую таблицу нужно добавить новые данные:
         switch (sUriMatcher.match(uri)) {
             case CATEGORIES:
                 if (values.containsKey(BugetPlaningContract.Categories.COLUMN_CATEGORY_IMG) == false) {
@@ -219,8 +207,6 @@ public class BugetPlaningProvider extends ContentProvider {
                         values);
                 if (rowId > 0) {
                     rowUri = ContentUris.withAppendedId(BugetPlaningContract.Categories.CONTENT_ID_URI_BASE, rowId);
-
-                    //строка отвечает за обновление данных в CursorAdapter(и, соответственно, в нашем ListView, где мы его будем использовать).
                     getContext().getContentResolver().notifyChange(rowUri, null);
                 }
                 break;
@@ -261,20 +247,17 @@ public class BugetPlaningProvider extends ContentProvider {
                 }
                 break;
             case BUGETALL:
-                if (values.containsKey(BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH) == false) {
-                    values.put(BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH, "");
+                if (values.containsKey(BugetAll.COLUMN_AMOUNT_BUGETALL) == false) {
+                    values.put(BugetAll.COLUMN_AMOUNT_BUGETALL, "");
                 }
-                if (values.containsKey(BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK) == false) {
-                    values.put(BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK, "");
+                if (values.containsKey(BugetAll.COLUMN_BUGETALL_DATE_BEGIN) == false) {
+                    values.put(BugetAll.COLUMN_BUGETALL_DATE_BEGIN, "");
                 }
-                if (values.containsKey(BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR) == false) {
-                    values.put(BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR, "");
-                }
-                if (values.containsKey(BugetAll.COLUMN_AMOUNT_BUGETALL_DAY) == false) {
-                    values.put(BugetAll.COLUMN_AMOUNT_BUGETALL_DAY, "");
+                if (values.containsKey(BugetAll.COLUMN_BUGETALL_DATE_END) == false) {
+                    values.put(BugetAll.COLUMN_BUGETALL_DATE_END, "");
                 }
                 rowId = db.insert(BugetAll.TABLE_NAME,
-                        BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH,
+                        BugetAll.COLUMN_AMOUNT_BUGETALL,
                         values);
                 if (rowId > 0) {
                     rowUri = ContentUris.withAppendedId(BugetAll.CONTENT_ID_URI_BASE, rowId);
@@ -285,7 +268,6 @@ public class BugetPlaningProvider extends ContentProvider {
         return rowUri;
     }
 
-    //delete() - удаляет данные
     @Override
     public int delete(Uri uri, String where, String[] whereArgs) {
             SQLiteDatabase db = bugetPlaningDbHelper.getWritableDatabase();
@@ -341,7 +323,6 @@ public class BugetPlaningProvider extends ContentProvider {
 
 
 
- //update() - обновляет строки в БД согласно заданным условиям
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String where, @Nullable String[]whereArgs) {
         SQLiteDatabase db = bugetPlaningDbHelper.getWritableDatabase();

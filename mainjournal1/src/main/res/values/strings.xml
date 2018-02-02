@@ -38,7 +38,7 @@
     <string name="buget_year">Бюджет на год</string>
     <string name="buget_week">Бюджет на неделю</string>
     <string name="buget_day">Бюджет на день</string>
-    <string name="button_buget">Распределить бюджет по категориям</string>
+    <string name="button_buget">Внести изменения в бюджет</string>
     <string name="tape_expediture_category">Категория</string>
     <string name="tape_expediture_fact">Факт</string>
     <string name="tape_exprditure_plan">План</string>
@@ -55,7 +55,11 @@
     <string name="button_add_expediture">Добавить расход</string>
     <string name="add_expediture_text_up">Добавление расхода</string>
     <string name="add_enter_expediture_hint1">Введите сумму расхода</string>
-    <string name="dutton_add_expediture_date">Выбрать дату</string>
+    <string name="dutton_add_expediture_date">Выбрать другую дату</string>
+
+
+    <!-- TODO: строковые ресурсы для класса FragmentCategory -->
+    <string name="delete_record">Удалить запись</string>
 
 
 </resources>

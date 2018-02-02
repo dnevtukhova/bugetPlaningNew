@@ -16,6 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="com.dn_evtukhova.db.BugetPlaningProvider"
+            android:exported="false"
+            android:authorities="com.dn_evtukhova.db.BugetPlaningContract"/>
     </application>
 
 </manifest>

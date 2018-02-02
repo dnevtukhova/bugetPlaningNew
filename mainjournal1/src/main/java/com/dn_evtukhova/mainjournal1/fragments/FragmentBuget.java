@@ -1,14 +1,29 @@
 package com.dn_evtukhova.mainjournal1.fragments;
 
+import android.content.ContentProvider;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.dn_evtukhova.mainjournal1.R;
+import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract;
+
+import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +33,7 @@ import com.dn_evtukhova.mainjournal1.R;
  * Use the {@link FragmentBuget#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentBuget extends Fragment {
+public class FragmentBuget extends Fragment  {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -27,6 +42,14 @@ public class FragmentBuget extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    TextView bugetMounth;
+    TextView bugetWeek;
+    TextView bugetDay;
+    TextView bugetYear;
+    Button bugetBtn;
+    SimpleCursorAdapter bugetAdapter;
+    ListView listBuget;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,7 +88,48 @@ public class FragmentBuget extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_buget, container, false);
+        final View view = inflater.inflate(R.layout.fragment_buget, container, false);
+
+        bugetMounth = (view).findViewById(R.id.bugetMounth);
+        bugetWeek = (view).findViewById(R.id.bugetWeek);
+        bugetDay = (view).findViewById(R.id.bugetDay);
+        bugetYear = (view).findViewById(R.id.bugetYear);
+        bugetBtn = (view).findViewById(R.id.buttonBuget);
+      //  bugetBtn.setOnClickListener(DialogInterface.OnClickListener);
+
+        // формируем столбцы сопоставления
+        String[] from = new String[] { BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH, BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR, BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK, BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_DAY};
+        int[] to = new int[] { R.id.bugetMounth, R.id.bugetYear, R.id.bugetWeek, R.id.bugetDay };
+
+        // создаем адаптер и настраиваем список
+       // bugetAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.fragment_buget, null, from, to, 0);
+       /* listBuget = (ListView)view.findViewById(R.id.listBuget);*/
+       // setListAdapter(bugetAdapter);
+
+        Cursor cursor =getActivity().getContentResolver().query(BugetPlaningContract.BugetAll.CONTENT_URI, null, null,
+                null, null);
+       getActivity().startManagingCursor(cursor);
+        cursor.moveToFirst();
+        //cursor.moveToNext();
+
+        String displayBugetMounth = cursor.getString(cursor
+                .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH));
+        String displayBugetDay = cursor.getString(cursor
+                .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_DAY));
+        String displayBugetYear = cursor.getString(cursor
+                .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR));
+        String displayBugetWeek = cursor.getString(cursor
+                .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK));
+        cursor.close();
+
+        bugetMounth.append(displayBugetMounth);
+        bugetDay.append(displayBugetDay);
+        bugetWeek.append(displayBugetWeek);
+        bugetYear.append(displayBugetYear);
+        // создаем лоадер для чтения данных
+      //  getActivity().getSupportLoaderManager().initLoader(0, null, this);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -75,7 +139,12 @@ public class FragmentBuget extends Fragment {
         }
     }
 
-   /* @Override
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;/* @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -85,11 +154,6 @@ public class FragmentBuget extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }*/
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     /**

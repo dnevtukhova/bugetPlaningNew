@@ -1,4 +1,4 @@
-package com.dn_evtukhova.mainjournal1.db;
+package com.dn_evtukhova.db;
 
 
 import android.content.ContentValues;
@@ -6,13 +6,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.dn_evtukhova.mainjournal1.R;
-import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract.Categories;
-import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract.Consumption;
-import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract.BugetOnCategory;
-import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract.BugetAll;
-
-
+import com.dn_evtukhova.R;
+import com.dn_evtukhova.db.BugetPlaningContract.BugetAll;
+import com.dn_evtukhova.db.BugetPlaningContract.BugetOnCategory;
+import com.dn_evtukhova.db.BugetPlaningContract.Categories;
+import com.dn_evtukhova.db.BugetPlaningContract.Consumption;
 
 
 /**
@@ -28,7 +26,7 @@ public class BugetPlaningDBHelper extends SQLiteOpenHelper {
     /**
      * Версия базы данных. При изменении схемы увеличить на единицу
      */
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 3;
 
     /**
      * Конструктор
@@ -65,10 +63,9 @@ public class BugetPlaningDBHelper extends SQLiteOpenHelper {
     // Строка для создания таблицы BUGETALL
     String SQL_CREATE_TABLE_BUGETALL = "CREATE TABLE " + BugetAll.TABLE_NAME + " ("
             + BugetPlaningContract.BugetAll._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH + " INTEGER NOT NULL, "
-            + BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK + " INTEGER NOT NULL, "
-            + BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR + " TEXT NOT NULL, "
-            + BugetAll.COLUMN_AMOUNT_BUGETALL_DAY + " TEXT NOT NULL);";
+            + BugetAll.COLUMN_AMOUNT_BUGETALL + " INTEGER NOT NULL, "
+            + BugetAll.COLUMN_BUGETALL_DATE_BEGIN + " TEXT NOT NULL, "
+            + BugetAll.COLUMN_BUGETALL_DATE_END + " TEXT NOT NULL);";
 
 
 
@@ -86,13 +83,9 @@ public class BugetPlaningDBHelper extends SQLiteOpenHelper {
             cv.put(Categories.COLUMN_CATEGORY_NAME, categories[i]);
             cv.put(Categories.COLUMN_CATEGORY_IMG, R.mipmap.ic_launcher);
             db.insert(Categories.TABLE_NAME, null, cv);
+
+
         }
-        ContentValues cv1 = new ContentValues();
-        cv1.put(BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH, 0);
-        cv1.put(BugetAll.COLUMN_AMOUNT_BUGETALL_DAY, 0);
-        cv1.put(BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR, 0);
-        cv1.put(BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK, 0);
-        db.insert(BugetAll.TABLE_NAME, null, cv1);
 
 
 

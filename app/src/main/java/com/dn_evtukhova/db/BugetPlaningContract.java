@@ -1,4 +1,4 @@
-package com.dn_evtukhova.mainjournal1.db;
+package com.dn_evtukhova.db;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -11,7 +11,7 @@ import android.provider.BaseColumns;
 public final class BugetPlaningContract {
     private BugetPlaningContract (){}
 
-    public static final String CONTENT_AUTHORITY = "com.dn_evtukhova.mainjournal1";
+    public static final String CONTENT_AUTHORITY = "com.dn_evtukhova.mainjournal1.db";
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
@@ -125,20 +125,19 @@ public final class BugetPlaningContract {
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BUGETALL;
 
 
-        public static final String DEFAULT_SORT_ORDER = "amount_bugetAll_mounth ASC";
+        public static final String DEFAULT_SORT_ORDER = "bugetAll_date_begin ASC";
 
-        public static final String COLUMN_AMOUNT_BUGETALL_MOUNTH = "amount_bugetAll_mounth";
-        public static final String COLUMN_AMOUNT_BUGETALL_WEEK = "amount_bugetAll_week";
-        public static final String COLUMN_AMOUNT_BUGETALL_YEAR = "amount_bugetAll_year";
-        public static final String COLUMN_AMOUNT_BUGETALL_DAY   = "amount_bugetAll_day";
+
+        public static final String COLUMN_AMOUNT_BUGETALL   = "amount_bugetAll";
+        public static final String COLUMN_BUGETALL_DATE_BEGIN   = "bugetAll_date_begin";
+        public static final String COLUMN_BUGETALL_DATE_END   = "bugetAll_date_end";
 
 
         public static final String[] DEFAULT_PROJECTION = new String[]{
                 BugetPlaningContract.BugetAll._ID,
-                BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH,
-                BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK,
-                BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR,
-                BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_DAY
+                BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL,
+                BugetPlaningContract.BugetAll.COLUMN_BUGETALL_DATE_BEGIN,
+                BugetPlaningContract.BugetAll.COLUMN_BUGETALL_DATE_END
 
         };
     }
