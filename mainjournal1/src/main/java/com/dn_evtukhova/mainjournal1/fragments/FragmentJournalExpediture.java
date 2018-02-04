@@ -1,23 +1,34 @@
 package com.dn_evtukhova.mainjournal1.fragments;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dn_evtukhova.mainjournal1.ActivityAddExpediture;
 import com.dn_evtukhova.mainjournal1.R;
+import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract;
 
 import java.text.SimpleDateFormat;
+
+import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +38,7 @@ import java.text.SimpleDateFormat;
  * Use the {@link FragmentJournalExpediture#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentJournalExpediture extends Fragment {
+public class FragmentJournalExpediture extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -44,9 +55,11 @@ public class FragmentJournalExpediture extends Fragment {
 
     Button btnAddExpediture;
 
-    public FragmentJournalExpediture() {
-        // Required empty public constructor
-    }
+   SimpleCursorAdapter journalExpeditureAdapter;
+
+
+
+   ListView listJournalExpediture;
 
     /**
      * Use this factory method to create a new instance of
@@ -121,6 +134,32 @@ public class FragmentJournalExpediture extends Fragment {
             }
         });
 
+        // формируем столбцы сопоставления
+        String[] from = new String[] { BugetPlaningContract.Categories.COLUMN_CATEGORY_IMG, BugetPlaningContract.Categories.COLUMN_CATEGORY_NAME,BugetPlaningContract.Consumption.COLUMN_CONSUMPTION_AMOUNT, BugetPlaningContract.Consumption.COLUMN_CONSUMPTION_DATE};
+        int[] to = new int[] { R.id.ivImgListJournalExpediture, R.id.tvTextListJournalExpediture1, R.id.tvTextListJournalExpediture2, R.id.tvTextListJournalExpediture3 };
+
+        // создаем адаптер и настраиваем список
+        journalExpeditureAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.list_journal_expediture, null, from, to, 0);
+        listJournalExpediture = (ListView) journalView.findViewById(R.id.list_journal_expediture_f);
+        listJournalExpediture.setAdapter(journalExpeditureAdapter);
+        //прокрутка списка
+        listJournalExpediture.setOnScrollListener(new AbsListView.OnScrollListener() {
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                // Log.d(LOG_TAG, "scrollState = " + scrollState);
+            }
+
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+                Log.d(LOG_TAG, "scroll: firstVisibleItem = " + firstVisibleItem
+                        + ", visibleItemCount" + visibleItemCount
+                        + ", totalItemCount" + totalItemCount);
+            }
+        });
+
+        // создаем лоадер для чтения данных
+        getActivity().getSupportLoaderManager().initLoader(0, null, this);
+
+
         return journalView;
     }
 
@@ -148,6 +187,38 @@ public class FragmentJournalExpediture extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        //String query = "SELECT * FROM mytable WHERE _id > ? LIMIT 100";
+        Log.d(LOG_TAG, "--- INNER JOIN with rawQuery---");
+        String query ="SELECT * "
+        + " FROM Consumption"
+        + " INNER JOIN Categories"
+        + " ON Consumption.category_id = "
+        + "Categories._id";
+
+       // String[] arguments = new String[] {"123"};
+        return new CursorLoader(
+                getContext(),
+                BugetPlaningContract.RawQuery.CONTENT_RAW_URI,
+                null,
+                query,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        journalExpeditureAdapter.swapCursor(data);
+       // data.close();
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader){journalExpeditureAdapter.swapCursor(null);
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -162,4 +233,5 @@ public class FragmentJournalExpediture extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

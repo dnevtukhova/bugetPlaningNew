@@ -1,6 +1,8 @@
 package com.dn_evtukhova.mainjournal1.fragments;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -11,6 +13,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +23,14 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dn_evtukhova.mainjournal1.R;
 import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract;
+
+
+
+import java.io.StringReader;
 
 import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
 
@@ -50,6 +59,10 @@ public class FragmentBuget extends Fragment  {
     Button bugetBtn;
     SimpleCursorAdapter bugetAdapter;
     ListView listBuget;
+
+    String value;
+    float chislo;
+    float bmf, bwf, bdf, byf;
 
     private OnFragmentInteractionListener mListener;
 
@@ -94,40 +107,185 @@ public class FragmentBuget extends Fragment  {
         bugetWeek = (view).findViewById(R.id.bugetWeek);
         bugetDay = (view).findViewById(R.id.bugetDay);
         bugetYear = (view).findViewById(R.id.bugetYear);
-        bugetBtn = (view).findViewById(R.id.buttonBuget);
-      //  bugetBtn.setOnClickListener(DialogInterface.OnClickListener);
+        bugetBtn = (Button)view.findViewById(R.id.buttonBuget);
+
+        //обработка нажатия кнопки
+        bugetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*try {*/
+
+               String bugetMounthString = bugetMounth.getText().toString();
+               // bmf = Float.parseFloat(bugetMounth.getText().toString());
+              String bugetWeekString = bugetWeek.getText().toString();
+              //  bwf = Float.parseFloat(bugetWeek.getText().toString());
+                String bugetDayString = bugetDay.getText().toString();
+              //  bdf = Float.parseFloat(bugetWeek.getText().toString());
+                String bugetYearString = bugetYear.getText().toString();
+               // byf = Float.valueOf(bugetYear.getText().toString());
+              // byf = Float.parseFloat(bugetYearString);
+               /* } catch (NumberFormatException e) {
+                    bmf = 0;
+                    bwf = 0;
+                    bdf=0;
+                    byf=0;
+                }*/
+                ContentValues cv = new ContentValues();
+                cv.put(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH, bugetMounthString);
+                cv.put(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK, bugetWeekString);
+                cv.put(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_DAY, bugetDayString);
+                cv.put(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR, bugetYearString);
+                Uri uri = ContentUris.withAppendedId(BugetPlaningContract.BugetAll.CONTENT_URI, 1);
+                int cnt = getActivity().getContentResolver().update(uri, cv, null, null);
+                Log.d(LOG_TAG, "update, count : " + cnt);
+
+            }
+        });
 
         // формируем столбцы сопоставления
-        String[] from = new String[] { BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH, BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR, BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK, BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_DAY};
-        int[] to = new int[] { R.id.bugetMounth, R.id.bugetYear, R.id.bugetWeek, R.id.bugetDay };
+        //String[] from = string[] { BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH, BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR, BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK, BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_DAY};
+        //double[] to = new double[] { R.id.bugetMounth, R.id.bugetYear, R.id.bugetWeek, R.id.bugetDay };
 
-        // создаем адаптер и настраиваем список
-       // bugetAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.fragment_buget, null, from, to, 0);
-       /* listBuget = (ListView)view.findViewById(R.id.listBuget);*/
-       // setListAdapter(bugetAdapter);
-
-        Cursor cursor =getActivity().getContentResolver().query(BugetPlaningContract.BugetAll.CONTENT_URI, null, null,
+         Cursor cursor =getActivity().getContentResolver().query(BugetPlaningContract.BugetAll.CONTENT_URI, null, null,
                 null, null);
        getActivity().startManagingCursor(cursor);
         cursor.moveToFirst();
-        //cursor.moveToNext();
+
 
         String displayBugetMounth = cursor.getString(cursor
                 .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH));
-        String displayBugetDay = cursor.getString(cursor
+        float displayBugetDay = cursor.getFloat(cursor
                 .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_DAY));
-        String displayBugetYear = cursor.getString(cursor
+        float displayBugetYear = cursor.getFloat(cursor
                 .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR));
-        String displayBugetWeek = cursor.getString(cursor
+        float displayBugetWeek = cursor.getFloat(cursor
                 .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK));
-        cursor.close();
+
 
         bugetMounth.append(displayBugetMounth);
-        bugetDay.append(displayBugetDay);
-        bugetWeek.append(displayBugetWeek);
-        bugetYear.append(displayBugetYear);
-        // создаем лоадер для чтения данных
-      //  getActivity().getSupportLoaderManager().initLoader(0, null, this);
+        bugetDay.setText(String.format("%.1f",displayBugetDay));
+        bugetWeek.setText(String.format("%.1f",displayBugetWeek));
+        bugetYear.setText(String.format("%.1f",displayBugetYear));
+        cursor.close();
+
+        //обработка нажатия на текстовое поле bugetMounth
+        bugetMounth.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+               // value = bugetMounth.getText().toString();
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+               try {
+                   value = bugetMounth.getText().toString();
+
+                  chislo = Float.parseFloat(value);
+                   bugetYear.setText(String.format("%.1f",(chislo * 12)));
+                   bugetDay.setText(String.format("%.1f",(chislo * 12) / 365));
+                   bugetWeek.setText(String.format("%.1f",((chislo * 12) / 365) * 7));
+               } catch (Exception e) {
+                   Toast.makeText(getContext(), "Заполните сумму бюджета!", Toast.LENGTH_SHORT).show();
+               }
+            }
+        });
+
+      //обработка нажатия на текстовое поле bugetYear
+        bugetYear.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    value = bugetYear.getText().toString();
+
+                    chislo = Float.parseFloat(value);
+                    bugetMounth.setText(String.format("%.1f",(chislo / 12)));
+                    bugetDay.setText(String.format("%.1f",chislo / 365));
+                    bugetWeek.setText(String.format("%.1f",((chislo  / 365) * 7)));
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "Заполните сумму бюджета!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //обработка нажатия на текстовое поле bugetDay
+        bugetDay.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    value = bugetDay.getText().toString();
+
+                    chislo = Float.parseFloat(value);
+                    bugetYear.setText(String.format("%.1f",(chislo * 365)));
+                    bugetMounth.setText(String.format("%.1f",(chislo * 365) / 12));
+                    bugetWeek.setText(String.format("%.1f",(chislo * 7)));
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "Заполните сумму бюджета!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //обработка нажатия на текстовое поле bugetWeek
+        bugetWeek.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    value = bugetWeek.getText().toString();
+
+                    chislo = Float.parseFloat(value);
+                    bugetYear.setText(String.format("%.1f",((chislo/7) * 365)));
+                    bugetDay.setText(String.format("%.1f",(chislo /7)));
+                    bugetMounth.setText(String.format("%.1f",((chislo /7) *365)/12));
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "Заполните сумму бюджета!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
 
         return view;
     }
@@ -170,4 +328,6 @@ public class FragmentBuget extends Fragment  {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

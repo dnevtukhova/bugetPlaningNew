@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 public class BugetPlaningProvider extends ContentProvider {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static HashMap<String, String> sCategoriesProjectionMap;
     private static HashMap<String, String> sConsumptionProjectionMap;
     private static HashMap<String, String> sBugetOnCategoryProjectionMap;
@@ -40,8 +40,10 @@ public class BugetPlaningProvider extends ContentProvider {
     private static final int BUGETONCATEGORY_ID = 106;
     private static final int BUGETALL = 107;
     private static final int BUGETALL_ID = 108;
+    private static final int URI_RAW_QUERY = 109; // Uri произвольного запроса
 
-//Затем объявим переменную класса UriMatcher
+
+    //Затем объявим переменную класса UriMatcher
     private static final UriMatcher sUriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
     static {
 //И в static блоке подготовим ее к использованию:
@@ -53,6 +55,8 @@ public class BugetPlaningProvider extends ContentProvider {
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "bugetOnCategory/#", BUGETONCATEGORY_ID);
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "bugetAll", BUGETALL);
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "bugetAll/#", BUGETALL_ID);
+
+        sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "raw", URI_RAW_QUERY);
 
         //Также нам необходимо задать проекции для выборки столбцов в запросе, они пригодятся нам в методе query():
         //Для проекции по умолчанию мы возьмем весь список столбцов:
@@ -100,58 +104,102 @@ public class BugetPlaningProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         String orderBy = null;
-        switch (sUriMatcher.match(uri)) {
-            case CATEGORIES:
-                qb.setTables(Categories.TABLE_NAME);
-                qb.setProjectionMap(sCategoriesProjectionMap);
-                orderBy = Categories.DEFAULT_SORT_ORDER;
-                break;
-            case CATEGORIES_ID:
-                qb.setTables(Categories.TABLE_NAME);
-                qb.setProjectionMap(sCategoriesProjectionMap);
-                qb.appendWhere(Categories._ID + "=" + uri.getPathSegments().get(Categories.CATEGORIES_ID_PATH_POSITION));
-                orderBy = Categories.DEFAULT_SORT_ORDER;
-                break;
-            case CONSUMPTION:
-                qb.setTables(Consumption.TABLE_NAME);
-                qb.setProjectionMap(sConsumptionProjectionMap);
-                orderBy = Consumption.DEFAULT_SORT_ORDER;
-                break;
-            case CONSUMPTION_ID:
-                qb.setTables(Consumption.TABLE_NAME);
-                qb.setProjectionMap(sConsumptionProjectionMap);
-                qb.appendWhere(Consumption._ID + "=" + uri.getPathSegments().get(Consumption.CONSUMPTION_ID_PATH_POSITION));
-                orderBy = Consumption.DEFAULT_SORT_ORDER;
-                break;
-            case BUGETONCATEGORY:
-                qb.setTables(BugetOnCategory.TABLE_NAME);
-                qb.setProjectionMap(sBugetOnCategoryProjectionMap);
-                orderBy = BugetOnCategory.DEFAULT_SORT_ORDER;
-                break;
-            case BUGETONCATEGORY_ID:
-                qb.setTables(BugetOnCategory.TABLE_NAME);
-                qb.setProjectionMap(sBugetOnCategoryProjectionMap);
-                qb.appendWhere(BugetOnCategory._ID + "=" + uri.getPathSegments().get(BugetOnCategory.BUGETONCATEGORY_ID_PATH_POSITION));
-                orderBy = BugetOnCategory.DEFAULT_SORT_ORDER;
-                break;
-            case BUGETALL:
-                qb.setTables(BugetAll.TABLE_NAME);
-                qb.setProjectionMap(sBugetAllProjectionMap);
-                orderBy = BugetAll.DEFAULT_SORT_ORDER;
-                break;
-            case BUGETALL_ID:
-                qb.setTables(BugetAll.TABLE_NAME);
-                qb.setProjectionMap(sBugetAllProjectionMap);
-                qb.appendWhere(BugetAll._ID + "=" + uri.getPathSegments().get(BugetAll.BUGETALL_ID_PATH_POSITION));
-                orderBy = BugetAll.DEFAULT_SORT_ORDER;
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
-        }
+        Cursor c;
         SQLiteDatabase db = bugetPlaningDbHelper.getReadableDatabase();
-        Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+
+            switch (sUriMatcher.match(uri)) {
+                case CATEGORIES:
+                    qb.setTables(Categories.TABLE_NAME);
+                    qb.setProjectionMap(sCategoriesProjectionMap);
+                    orderBy = Categories.DEFAULT_SORT_ORDER;
+
+                    c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+                   // c.setNotificationUri(getContext().getContentResolver(), uri);
+                   // return c;
+
+                    break;
+                case CATEGORIES_ID:
+                    qb.setTables(Categories.TABLE_NAME);
+                    qb.setProjectionMap(sCategoriesProjectionMap);
+                    qb.appendWhere(Categories._ID + "=" + uri.getPathSegments().get(Categories.CATEGORIES_ID_PATH_POSITION));
+                    orderBy = Categories.DEFAULT_SORT_ORDER;
+
+                    c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+                    //c.setNotificationUri(getContext().getContentResolver(), uri);
+                   // return c;
+                    break;
+                case CONSUMPTION:
+                    qb.setTables(Consumption.TABLE_NAME);
+                    qb.setProjectionMap(sConsumptionProjectionMap);
+                    orderBy = Consumption.DEFAULT_SORT_ORDER;
+
+                    c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+                   // c.setNotificationUri(getContext().getContentResolver(), uri);
+                   // return c;
+                    break;
+                case CONSUMPTION_ID:
+                    qb.setTables(Consumption.TABLE_NAME);
+                    qb.setProjectionMap(sConsumptionProjectionMap);
+                    qb.appendWhere(Consumption._ID + "=" + uri.getPathSegments().get(Consumption.CONSUMPTION_ID_PATH_POSITION));
+                    orderBy = Consumption.DEFAULT_SORT_ORDER;
+
+                    c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+                    //c.setNotificationUri(getContext().getContentResolver(), uri);
+                   // return c;
+                    break;
+                case BUGETONCATEGORY:
+                    qb.setTables(BugetOnCategory.TABLE_NAME);
+                    qb.setProjectionMap(sBugetOnCategoryProjectionMap);
+                    orderBy = BugetOnCategory.DEFAULT_SORT_ORDER;
+                    c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+                   // c.setNotificationUri(getContext().getContentResolver(), uri);
+                   // return c;
+                    break;
+                case BUGETONCATEGORY_ID:
+                    qb.setTables(BugetOnCategory.TABLE_NAME);
+                    qb.setProjectionMap(sBugetOnCategoryProjectionMap);
+                    qb.appendWhere(BugetOnCategory._ID + "=" + uri.getPathSegments().get(BugetOnCategory.BUGETONCATEGORY_ID_PATH_POSITION));
+                    orderBy = BugetOnCategory.DEFAULT_SORT_ORDER;
+
+                    c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+                   // c.setNotificationUri(getContext().getContentResolver(), uri);
+                   // return c;
+                    break;
+                case BUGETALL:
+                    qb.setTables(BugetAll.TABLE_NAME);
+                    qb.setProjectionMap(sBugetAllProjectionMap);
+                    orderBy = BugetAll.DEFAULT_SORT_ORDER;
+
+                    c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+                    //c.setNotificationUri(getContext().getContentResolver(), uri);
+                    //return c;
+                    break;
+                case BUGETALL_ID:
+                    qb.setTables(BugetAll.TABLE_NAME);
+                    qb.setProjectionMap(sBugetAllProjectionMap);
+                    qb.appendWhere(BugetAll._ID + "=" + uri.getPathSegments().get(BugetAll.BUGETALL_ID_PATH_POSITION));
+                    orderBy = BugetAll.DEFAULT_SORT_ORDER;
+
+                    c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+                   // c.setNotificationUri(getContext().getContentResolver(), uri);
+                    //return c;
+                    break;
+
+                case URI_RAW_QUERY:
+                    c= db.rawQuery(selection, selectionArgs);
+                     break;
+
+                default:
+                    throw new IllegalArgumentException("Unknown URI " + uri);
+            }
+            /*SQLiteDatabase db = bugetPlaningDbHelper.getReadableDatabase();
+            Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+            c.setNotificationUri(getContext().getContentResolver(), uri);
+            return c;
+*/
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
+
     }
 
     //getType() - возвращает MIME-тип для заданной content URI

@@ -142,5 +142,11 @@ public final class BugetPlaningContract {
 
         };
     }
-
+    //для произвольного SQL-запроса к БД
+    public static final class RawQuery implements BaseColumns
+    {
+        private static final String SCHEME = "content://";
+       private static final String RAW_QUERY_PATH = "/raw";
+        public static final Uri CONTENT_RAW_URI = Uri.parse(SCHEME + CONTENT_AUTHORITY + RAW_QUERY_PATH);
+    }
 }

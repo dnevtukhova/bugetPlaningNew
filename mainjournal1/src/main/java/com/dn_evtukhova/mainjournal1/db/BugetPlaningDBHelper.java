@@ -28,7 +28,7 @@ public class BugetPlaningDBHelper extends SQLiteOpenHelper {
     /**
      * Версия базы данных. При изменении схемы увеличить на единицу
      */
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 14;
 
     /**
      * Конструктор
@@ -65,10 +65,10 @@ public class BugetPlaningDBHelper extends SQLiteOpenHelper {
     // Строка для создания таблицы BUGETALL
     String SQL_CREATE_TABLE_BUGETALL = "CREATE TABLE " + BugetAll.TABLE_NAME + " ("
             + BugetPlaningContract.BugetAll._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH + " INTEGER NOT NULL, "
-            + BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK + " INTEGER NOT NULL, "
-            + BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR + " TEXT NOT NULL, "
-            + BugetAll.COLUMN_AMOUNT_BUGETALL_DAY + " TEXT NOT NULL);";
+            + BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH + " REAL NOT NULL, "
+            + BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK + " REAL NOT NULL, "
+            + BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR + " REAL NOT NULL, "
+            + BugetAll.COLUMN_AMOUNT_BUGETALL_DAY + " REAL NOT NULL);";
 
 
 

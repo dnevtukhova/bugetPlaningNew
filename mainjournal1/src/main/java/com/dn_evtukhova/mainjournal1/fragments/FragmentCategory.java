@@ -62,7 +62,6 @@ public class FragmentCategory extends Fragment implements LoaderCallbacks<Cursor
     SimpleCursorAdapter scAdapter;
     ListView listCategories;
 
-
     public FragmentCategory() {
         // Required empty public constructor
     }
@@ -110,9 +109,7 @@ public class FragmentCategory extends Fragment implements LoaderCallbacks<Cursor
                                                   startActivity(intent);
                                               }
                                           });
-        /*// открываем подключение к БД
-            dbHelper = new DBHelper(getContext().getApplicationContext());
-            dbHelper.open();*/
+
 
         // формируем столбцы сопоставления
             String[] from = new String[] { BugetPlaningContract.Categories.COLUMN_CATEGORY_IMG, BugetPlaningContract.Categories.COLUMN_CATEGORY_NAME};
@@ -137,7 +134,7 @@ public class FragmentCategory extends Fragment implements LoaderCallbacks<Cursor
         });
 
             // создаем лоадер для чтения данных
-            getActivity().getSupportLoaderManager().initLoader(0, null, this);
+            getActivity().getSupportLoaderManager().initLoader(1, null, this);
 
             // добавляем контекстное меню к списку
         registerForContextMenu(listCategories);

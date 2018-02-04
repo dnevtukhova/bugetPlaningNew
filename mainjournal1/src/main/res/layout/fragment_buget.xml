@@ -27,7 +27,8 @@
                 android:id="@+id/bugetMounth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/buget_on_mounth" />
+                android:hint="@string/buget_on_mounth"
+                android:inputType="numberDecimal"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -39,7 +40,8 @@
                 android:id="@+id/bugetYear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/buget_year" />
+                android:hint="@string/buget_year"
+                android:inputType="numberDecimal"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -51,7 +53,8 @@
                 android:id="@+id/bugetWeek"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/buget_week" />
+                android:hint="@string/buget_week"
+                android:inputType="numberDecimal"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -63,7 +66,9 @@
                 android:id="@+id/bugetDay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/buget_day" />
+                android:hint="@string/buget_day"
+                android:inputType="numberDecimal"/>
+
         </android.support.design.widget.TextInputLayout>
 
 
@@ -72,6 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/button_buget" />
+
+
     </LinearLayout>
 
 </FrameLayout>
