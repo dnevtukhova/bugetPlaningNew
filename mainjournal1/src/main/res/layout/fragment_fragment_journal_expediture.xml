@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,30 +7,25 @@
 
 
         <!-- TODO: Update blank fragment layout -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="visible">
+
 
                 <TextView
+                    android:id="@+id/text_for_j_e"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/journal_expediture_text1" />
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/textViewDateJournal"
+                    android:layout_below="@+id/text_for_j_e"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" "
                     android:textSize="28sp"/>
 
                 <Spinner
+                    android:layout_below="@+id/textViewDateJournal"
                     android:id="@+id/spinnerJournal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -38,25 +33,63 @@
                     android:spinnerMode="dialog"
                     android:visibility="visible" />
 
-        </LinearLayout>
+
 
 
                 <ListView
                     android:id="@+id/list_journal_expediture_f"
+                    android:layout_below="@id/spinnerJournal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/text_sum_expediture">
+
 
 
                 </ListView>
+           <TextView
+               android:id="@+id/text_sum_expediture"
+                android:layout_above="@id/text_sum_buget"
+
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expediture_for_period" />
+
+            <TextView
+                android:id="@+id/text_sum_buget"
+                android:layout_above="@id/buttonJournal"
+
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/buget_for_period" />
+            <TextView
+                android:id="@+id/sum_expediture"
+
+                android:layout_above="@id/sum_buget"
+                android:layout_toRightOf="@id/text_sum_expediture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" " />
+            <TextView
+
+                android:id="@+id/sum_buget"
+                android:layout_above="@id/buttonJournal"
+                android:layout_toRightOf="@id/text_sum_buget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" " />
                 <Button
+
                     android:id="@+id/buttonJournal"
+                    android:layout_alignParentBottom="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tape_expediture_button"
-                    android:layout_gravity="right"/>
+                    android:layout_gravity="left"/>
 
 
 
-        </LinearLayout>
 
-</FrameLayout>
+
+</RelativeLayout>

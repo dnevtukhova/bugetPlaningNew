@@ -148,5 +148,7 @@ public final class BugetPlaningContract {
         private static final String SCHEME = "content://";
        private static final String RAW_QUERY_PATH = "/raw";
         public static final Uri CONTENT_RAW_URI = Uri.parse(SCHEME + CONTENT_AUTHORITY + RAW_QUERY_PATH);
+
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + RAW_QUERY_PATH;
     }
 }

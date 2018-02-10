@@ -67,7 +67,7 @@ FragmentCategory fCategory;
         fTapeExpediture = new FragmentTapeExpediture();
         fCategory = new FragmentCategory();
 
-       android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+      android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.container, fJournalExpediture);
         ft.commit();
 

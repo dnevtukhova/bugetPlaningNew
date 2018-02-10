@@ -60,6 +60,8 @@
 
     <!-- TODO: строковые ресурсы для класса FragmentCategory -->
     <string name="delete_record">Удалить запись</string>
+    <string name="expediture_for_period">Расход за период</string>
+    <string name="buget_for_period">Бюджет за период</string>
 
 
 </resources>

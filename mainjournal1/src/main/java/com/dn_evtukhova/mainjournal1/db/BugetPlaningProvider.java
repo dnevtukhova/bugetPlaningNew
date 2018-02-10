@@ -224,6 +224,8 @@ public class BugetPlaningProvider extends ContentProvider {
                 return BugetPlaningContract.BugetAll.CONTENT_TYPE;
             case BUGETALL_ID:
                 return BugetPlaningContract.BugetAll.CONTENT_ITEM_TYPE;
+            case URI_RAW_QUERY:
+                return BugetPlaningContract.RawQuery.CONTENT_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -441,6 +443,8 @@ public class BugetPlaningProvider extends ContentProvider {
                 }
                 count = db.update(BugetAll.TABLE_NAME, values, finalWhere, whereArgs);
                 break;
+
+
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
