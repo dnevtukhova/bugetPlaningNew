@@ -63,7 +63,7 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
     Spinner journalSpinner;
     private OnFragmentInteractionListener mListener;
     String[] journalPeriod = {"День", "Неделя", "Месяц", "Год"};
-   public static SimpleDateFormat dfDate_day = new SimpleDateFormat("dd/MM/yyyy");
+   public static SimpleDateFormat dfDate_day;
 
     Button btnAddExpediture;
 
@@ -122,7 +122,7 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
         textViewBugetOnPeriod = (TextView)journalView.findViewById(R.id.sum_buget);
         textViewSumExpediture = (TextView)journalView.findViewById(R.id.sum_expediture);
 
-
+        dfDate_day = new SimpleDateFormat("dd/MM/yyyy");
 
          ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, journalPeriod);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

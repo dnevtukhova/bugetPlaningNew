@@ -39,11 +39,6 @@
             android:ems="10"
             android:inputType="date" />
 
-        <Button
-            android:id="@+id/buttonAddExpeditureDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dutton_add_expediture_date" />
 
         <Button
             android:id="@+id/buttonViewAddExpediture"
@@ -55,11 +50,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <ListView
-            android:id="@+id/ListViewExpediture"
-            style="@style/Widget.AppCompat.ListView.Menu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
