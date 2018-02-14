@@ -2,6 +2,7 @@ package com.dn_evtukhova.mainjournal1.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.dn_evtukhova.mainjournal1.ActivityAddExpediture;
 import com.dn_evtukhova.mainjournal1.R;
 import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract;
+import com.dn_evtukhova.mainjournal1.db.BugetPlaningDBHelper;
 
 import java.text.SimpleDateFormat;
 import java.time.Month;
@@ -61,7 +63,7 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
     Spinner journalSpinner;
     private OnFragmentInteractionListener mListener;
     String[] journalPeriod = {"День", "Неделя", "Месяц", "Год"};
-    SimpleDateFormat dfDate_day = new SimpleDateFormat("dd/MM/yyyy");
+   public static SimpleDateFormat dfDate_day = new SimpleDateFormat("dd/MM/yyyy");
 
     Button btnAddExpediture;
 
@@ -72,13 +74,14 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
 
     ListView listJournalExpediture;
     ListView listJournalExpediture1;
-    long date = System.currentTimeMillis();
+   public static long date = System.currentTimeMillis();
     Calendar calendar = Calendar.getInstance();
     int Month;
     int Year;
     String getMounth;
 
     TextView textViewBugetOnPeriod;
+    TextView textViewSumExpediture;
 
     Cursor cursorMy;
 
@@ -117,16 +120,11 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
         View journalView = inflater.inflate(R.layout.fragment_fragment_journal_expediture, container, false);
         textViewDJournal = (TextView) journalView.findViewById(R.id.textViewDateJournal);
         textViewBugetOnPeriod = (TextView)journalView.findViewById(R.id.sum_buget);
+        textViewSumExpediture = (TextView)journalView.findViewById(R.id.sum_expediture);
 
 
 
-        /*SimpleDateFormat dfDate_day= new SimpleDateFormat("dd/MM/yyyy");
-        String currentDate = dfDate_day.format(date);
-        String dateString=dfDate_day.format(date);
-        textViewDJournal.setText(dateString);*/
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, journalPeriod);
+         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, journalPeriod);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         journalSpinner = (Spinner) journalView.findViewById(R.id.spinnerJournal);
@@ -157,7 +155,12 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
     @Override
     public void onItemSelected(AdapterView<?> parent, View view,
                                int position, long id) {
-        // показываем позиция нажатого элемента
+        //заполняем поле сумма расхода
+        // Подключаемся к БД
+        BugetPlaningDBHelper dbh = new BugetPlaningDBHelper(getContext());
+        SQLiteDatabase db = dbh.getReadableDatabase();
+
+         // показываем позиция нажатого элемента
         // Toast.makeText(getContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
         switch (journalSpinner.getSelectedItemPosition()) {
             case 0:
@@ -191,16 +194,41 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                 getActivity().getSupportLoaderManager().initLoader(LDAY, null, this);
 
                 //заполняем поле сумма бюджета
+                //очищаем текстовое поле
+                textViewBugetOnPeriod.setText("");
                 //курсор для заполнения поля сумма бюджета
                 Cursor cursorMy=getActivity().getContentResolver().query(BugetPlaningContract.BugetAll.CONTENT_URI, null, null,
                         null, null);
                 getActivity().startManagingCursor(cursorMy);
-                cursorMy.moveToFirst();
+              cursorMy.moveToFirst();
 
                 String displayBugetDay = cursorMy.getString(cursorMy
                         .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_DAY));
                 textViewBugetOnPeriod.append(displayBugetDay);
                 cursorMy.close();
+
+                //заполняем поле сумма расхода
+                // Описание курсора
+                Cursor cSumExpediture;
+                //очищаем текстовое поле
+                textViewSumExpediture.setText("");
+                String sqlQuery = "SELECT SUM(consumption_amount) "
+                    + " FROM Consumption"
+                    + " WHERE consumption_date LIKE ?";
+                cSumExpediture = db.rawQuery(sqlQuery, new String[] {mySelectDate(1)});
+                getActivity().startManagingCursor(cSumExpediture);
+                cSumExpediture.moveToFirst();
+                if (cSumExpediture != null && cSumExpediture.getCount()>0){
+                   // cSumExpediture.moveToFirst();
+
+
+               String sumConsumptionAmount = cSumExpediture.getString(0);
+               if (sumConsumptionAmount==null)
+              {sumConsumptionAmount = "0";}
+                textViewSumExpediture.append(sumConsumptionAmount);}
+
+                    //ЗАКРЫВАЕМ КУРСОР
+                cSumExpediture.close();
                 break;
             case 1:
                String fWeek = formatWeek();
@@ -226,11 +254,12 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                                 + ", totalItemCount" + totalItemCount);
                     }
                 });
-                //очищаем текстовое поле
-                textViewBugetOnPeriod.setText("");
+
                 // создаем лоадер для чтения данных
                 getActivity().getSupportLoaderManager().initLoader(LWEEK, null, this);
 
+                //очищаем текстовое поле
+                textViewBugetOnPeriod.setText("");
                 //курсор для заполнения поля сумма бюджета
                 Cursor cursorMyW=getActivity().getContentResolver().query(BugetPlaningContract.BugetAll.CONTENT_URI, null, null,
                         null, null);
@@ -241,7 +270,30 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                         .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_WEEK));
                 textViewBugetOnPeriod.append(displayBugetWeek);
                 cursorMyW.close();
+
+                //заполняем поле сумма расхода
+                //очищаем текстовое поле
+                textViewSumExpediture.setText("");
+                String sqlQueryW = "SELECT SUM(consumption_amount) "
+                        + " FROM Consumption"
+                        + " WHERE consumption_date IN (?,?,?,?,?,?,?,?)";
+                //получаем выборку значений по текущим дням недели
+                String [] k = new String[8];
+                dateWeek(k);
+                String[] selectionArgs4 = { k[0], k[1], k[2], k[3], k[4], k[5], k[6], k[7]};
+
+
+                cSumExpediture = db.rawQuery(sqlQueryW, selectionArgs4);
+                cSumExpediture.moveToFirst();
+                String sumConsumptionAmountW = cSumExpediture.getString(0);
+                if (sumConsumptionAmountW==null)
+                {sumConsumptionAmountW = "0";}
+                textViewSumExpediture.append(sumConsumptionAmountW);
+
+                //ЗАКРЫВАЕМ КУРСОР
+                cSumExpediture.close();
                 break;
+
             case 2:
                 Calendar c1 = new GregorianCalendar();
                 c1.setTimeInMillis(System.currentTimeMillis());
@@ -284,6 +336,24 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                         .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_MOUNTH));
                 textViewBugetOnPeriod.append(displayBugetMonth);
                 cursorMyM.close();
+
+                //заполняем поле сумма расхода
+                //очищаем текстовое поле
+                textViewSumExpediture.setText("");
+                String sqlQueryM = "SELECT SUM(consumption_amount) "
+                        + " FROM Consumption"
+                        + " WHERE consumption_date LIKE ? LIMIT 100";
+                String[] selectionArgsM = {"%" + mySelectDate(3)};
+
+                cSumExpediture = db.rawQuery(sqlQueryM, selectionArgsM);
+                cSumExpediture.moveToFirst();
+                String sumConsumptionAmountM = cSumExpediture.getString(0);
+                if (sumConsumptionAmountM==null)
+                {sumConsumptionAmountW = "0";}
+                textViewSumExpediture.append(sumConsumptionAmountM);
+
+                //ЗАКРЫВАЕМ КУРСОР
+                cSumExpediture.close();
                 break;
             case 3:
                 Calendar c2 = new GregorianCalendar();
@@ -328,8 +398,27 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                         .getColumnIndex(BugetPlaningContract.BugetAll.COLUMN_AMOUNT_BUGETALL_YEAR));
                 textViewBugetOnPeriod.append(displayBugetYear);
                 cursorMyY.close();
+
+                //заполняем поле сумма расхода
+                //очищаем текстовое поле
+                textViewSumExpediture.setText("");
+                String sqlQueryY = "SELECT SUM(consumption_amount) "
+                        + " FROM Consumption"
+                        + " WHERE consumption_date LIKE ? LIMIT 100";
+                String[] selectionArgsY = {"%" + mySelectDate(4)};
+
+                cSumExpediture = db.rawQuery(sqlQueryY, selectionArgsY);
+                cSumExpediture.moveToFirst();
+                String sumConsumptionAmountY = cSumExpediture.getString(0);
+                if (sumConsumptionAmountY==null)
+                {sumConsumptionAmountY = "0";}
+                textViewSumExpediture.append(sumConsumptionAmountY);
+
+                //ЗАКРЫВАЕМ КУРСОР
+                cSumExpediture.close();
                 break;
         }
+        dbh.close();
     }
 
     @Override
@@ -391,28 +480,14 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                 + "Categories._id"
                 + " WHERE consumption_date IN (?,?,?,?,?,?,?,?)";
 
-       String[] selectionArgs2 = {"%02%"};
-        String[] selectionArgs3;
+
 
       String [] k = new String[8];
       dateWeek(k);
 
-        Calendar c1 = new GregorianCalendar();
-        c1.setTimeInMillis(System.currentTimeMillis());
 
-            c1.add(Calendar.DATE, -6);
-            Date todate1 = c1.getTime();
-            String fromdate = dfDate_day.format(todate1);
-        Calendar c2 = new GregorianCalendar();
-        c2.setTimeInMillis(System.currentTimeMillis());
-        c2.add (Calendar.DATE, -5);
-        Date todate2=c2.getTime();
-        String fromdate2 = dfDate_day.format(todate2);
-
-       // System.out.println(k);
         String[] selectionArgs4 = { k[0], k[1], k[2], k[3], k[4], k[5], k[6], k[7]};
 
-        CursorLoader CursorLoader;
 
 
         if (id == LDAY) {
@@ -531,7 +606,7 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
         void onFragmentInteraction(Uri uri);
     }
 
-    public String mySelectDate(int i) {
+    public static String mySelectDate(int i) {
         String myDateString = dfDate_day.format(date);
                if (i == 1) {
             return myDateString;

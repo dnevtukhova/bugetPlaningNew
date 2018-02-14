@@ -17,11 +17,28 @@
             android:layout_height="wrap_content"
             android:text="@string/blank_fragment_history"
             tools:text="История" />
+        <TextView
+            android:id="@+id/textDayWeekHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/blank_fragment_history"/>
+
+        <Spinner
+            android:id="@+id/spinnerHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chartHistory"
             android:layout_width="match_parent"
-            android:layout_height="378dp" />
+            android:layout_height="378dp" >
+
+
+        </com.github.mikephil.charting.charts.PieChart>
+        <ListView
+            android:id="@+id/listHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
