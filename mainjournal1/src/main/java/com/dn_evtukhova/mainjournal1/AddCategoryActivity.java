@@ -36,8 +36,8 @@ public class AddCategoryActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_add_category);
         btnAddCategory = (Button)findViewById(R.id.buttonViewAddCategory);
         btnAddCategory.setOnClickListener(this);
-        btnLog = (Button)findViewById(R.id.buttonLocBd);
-        btnLog.setOnClickListener(this);
+       // btnLog = (Button)findViewById(R.id.buttonLocBd);
+      //  btnLog.setOnClickListener(this);
 
         eTextCategory = (EditText)findViewById(R.id.editTextAddCategory);
 // подключаемся к базе
@@ -86,7 +86,7 @@ public class AddCategoryActivity extends AppCompatActivity implements View.OnCli
                // dbHelper.addRec(categName, R.mipmap.ic_launcher);
 
                 break;
-            case R.id.buttonLocBd:
+           /* case R.id.buttonLocBd:
                 cursor = database.query(DBHelper.TABLE_CONTACTS, null, null, null, null, null, null);
 
                 if (cursor.moveToFirst()) {
@@ -101,7 +101,7 @@ public class AddCategoryActivity extends AppCompatActivity implements View.OnCli
                     Log.d("mLog","0 rows");
 
                 cursor.close();
-            break;
+            break;*/
 
         }
         dbHelper.close();

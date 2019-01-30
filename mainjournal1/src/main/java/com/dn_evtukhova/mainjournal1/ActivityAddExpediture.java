@@ -11,7 +11,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.icu.text.SimpleDateFormat;
+
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 
@@ -34,6 +34,8 @@ import android.widget.TextView;
 import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract;
 import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract.Categories;
 import com.dn_evtukhova.mainjournal1.db.BugetPlaningDBHelper;
+
+import java.text.SimpleDateFormat;
 
 import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
 

@@ -199,7 +199,7 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                 //курсор для заполнения поля сумма бюджета
                 Cursor cursorMy=getActivity().getContentResolver().query(BugetPlaningContract.BugetAll.CONTENT_URI, null, null,
                         null, null);
-                getActivity().startManagingCursor(cursorMy);
+              //  getActivity().startManagingCursor(cursorMy);
               cursorMy.moveToFirst();
 
                 String displayBugetDay = cursorMy.getString(cursorMy
@@ -216,7 +216,7 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                     + " FROM Consumption"
                     + " WHERE consumption_date LIKE ?";
                 cSumExpediture = db.rawQuery(sqlQuery, new String[] {mySelectDate(1)});
-                getActivity().startManagingCursor(cSumExpediture);
+              //  getActivity().startManagingCursor(cSumExpediture);
                 cSumExpediture.moveToFirst();
                 if (cSumExpediture != null && cSumExpediture.getCount()>0){
                    // cSumExpediture.moveToFirst();
@@ -263,7 +263,7 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                 //курсор для заполнения поля сумма бюджета
                 Cursor cursorMyW=getActivity().getContentResolver().query(BugetPlaningContract.BugetAll.CONTENT_URI, null, null,
                         null, null);
-                getActivity().startManagingCursor(cursorMyW);
+               // getActivity().startManagingCursor(cursorMyW);
                 cursorMyW.moveToFirst();
 
                 String displayBugetWeek = cursorMyW.getString(cursorMyW
@@ -329,7 +329,7 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                 //курсор для заполнения поля сумма бюджета
                 Cursor cursorMyM=getActivity().getContentResolver().query(BugetPlaningContract.BugetAll.CONTENT_URI, null, null,
                         null, null);
-                getActivity().startManagingCursor(cursorMyM);
+              //  getActivity().startManagingCursor(cursorMyM);
                 cursorMyM.moveToFirst();
 
                 String displayBugetMonth = cursorMyM.getString(cursorMyM
@@ -349,7 +349,7 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                 cSumExpediture.moveToFirst();
                 String sumConsumptionAmountM = cSumExpediture.getString(0);
                 if (sumConsumptionAmountM==null)
-                {sumConsumptionAmountW = "0";}
+                {sumConsumptionAmountM = "0";}
                 textViewSumExpediture.append(sumConsumptionAmountM);
 
                 //ЗАКРЫВАЕМ КУРСОР
@@ -391,7 +391,7 @@ public class FragmentJournalExpediture extends Fragment implements LoaderManager
                 //курсор для заполнения поля сумма бюджета
                 Cursor cursorMyY=getActivity().getContentResolver().query(BugetPlaningContract.BugetAll.CONTENT_URI, null, null,
                         null, null);
-                getActivity().startManagingCursor(cursorMyY);
+              //  getActivity().startManagingCursor(cursorMyY);
                 cursorMyY.moveToFirst();
 
                 String displayBugetYear = cursorMyY.getString(cursorMyY

@@ -31,7 +31,7 @@ public class BugetPlaningProvider extends ContentProvider {
     private static HashMap<String, String> sBugetOnCategoryProjectionMap;
     private static HashMap<String, String> sBugetAllProjectionMap;
 
-//Для начала зададим константы, соответствующие возможным типам запроса к нашей БД:
+//Для начала зададим константы, соответствующие возможным типам запроса к БД:
     private static final int CATEGORIES = 101;
     private static final int CATEGORIES_ID = 102;
     private static final int CONSUMPTION = 103;
@@ -46,7 +46,7 @@ public class BugetPlaningProvider extends ContentProvider {
     //Затем объявим переменную класса UriMatcher
     private static final UriMatcher sUriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
     static {
-//И в static блоке подготовим ее к использованию:
+        //И в static блоке подготовим ее к использованию:
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "categories", CATEGORIES);
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "categories/#", CATEGORIES_ID);
         sUriMatcher.addURI(BugetPlaningContract.CONTENT_AUTHORITY, "consumption", CONSUMPTION);
@@ -90,7 +90,7 @@ public class BugetPlaningProvider extends ContentProvider {
      private BugetPlaningDBHelper bugetPlaningDbHelper;
 //onCreate() - инициализирует ContentProvider.
 // Провайдер будет создан как только вы обратитесь к нему с помощью ContentResolver'a
-//В методе onCreate() создадим наш DBHelper:
+
     @Override
     public boolean onCreate() {
 
@@ -203,7 +203,7 @@ public class BugetPlaningProvider extends ContentProvider {
     }
 
     //getType() - возвращает MIME-тип для заданной content URI
-    //В реализации метода getType() мы просто будем возвращать тип данных из нашего ContractClass'a:
+    //В реализации метода getType() мы просто будем возвращать тип данных из класса BugetPlaningContract
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {

@@ -3,13 +3,13 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.dn_evtukhova.mainjournal1"
+        applicationId "com.dn_evtukhova"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+      testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
     buildTypes {
@@ -19,6 +19,8 @@ android {
         }
     }
     productFlavors {
+    }
+    compileOptions {
     }
 }
 
@@ -32,4 +34,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    //compile project(path: ':mainjournal1')
+    compile 'junit:junit:4.12'
 }

@@ -1,6 +1,7 @@
 package com.dn_evtukhova.mainjournal1.fragments;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.widget.Spinner;
 
 import com.dn_evtukhova.mainjournal1.R;
 import com.dn_evtukhova.mainjournal1.db.BugetPlaningContract;
+import com.dn_evtukhova.mainjournal1.db.BugetPlaningDBHelper;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -96,7 +98,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemSelec
         // Inflate the layout for this fragment
        View viewHistory = inflater.inflate(R.layout.fragment_history, container, false);
         PieChart chart = (PieChart)viewHistory.findViewById(R.id.chartHistory);
-      /*  List<PieEntry> entries = new ArrayList<>();
+        List<PieEntry> entries = new ArrayList<>();
 
         entries.add(new PieEntry(18.5f, "Продукты"));
 
@@ -109,7 +111,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemSelec
 
         set.setColors(ColorTemplate.VORDIPLOM_COLORS);
         chart.setData(data);
-        chart.invalidate();*/
+        chart.invalidate();
 
         ArrayAdapter<String> adapterHistory = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, historyPeriod);
         adapterHistory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -150,11 +152,24 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemSelec
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        BugetPlaningDBHelper dbh = new BugetPlaningDBHelper(getContext());
+        SQLiteDatabase db = dbh.getReadableDatabase();
         switch (historySpinner.getSelectedItemPosition()) {
             case 0:
+                //Описание курсора
+                Cursor cSumExpediture;
+                String table = "consumption as CS inner join categories as CT on CS.category_id = CT.id";
+                String columns[] = { "CT.category_name as name", "sum(CS.consumption_amount) as sum", "CS.consumption_date as date"};
+                String groupBy = "name";
+                String selection = "date = ?";
+                String[] selectionArgs = {FragmentJournalExpediture.mySelectDate(3)};
+                cSumExpediture = db.query(table,columns,selection, selectionArgs, groupBy, null, null);
+                logCursor(cSumExpediture);
+                cSumExpediture.close();
+
+
                 // формируем столбцы сопоставления
-                String[] from = new String[]{BugetPlaningContract.Consumption.COLUMN_CONSUMPTION_AMOUNT /*BugetPlaningContract.Consumption.COLUMN_CONSUMPTION_AMOUNT*/};
-                int[] to = new int[]{R.id.tvTextListJournalExpediture2};
+               /* String[] from = new String[]{BugetPlaningContract.Consumption.COLUMN_CONSUMPTION_AMOUNT, BugetPlaningContract.Consumption.COLUMN_CONSUMPTION_AMOUNT};
 
                 // создаем адаптер и настраиваем список
                 historyAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.list_journal_expediture, null, from, to, 0);
@@ -175,7 +190,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemSelec
                 });
 
                 // создаем лоадер для чтения данных
-                getActivity().getSupportLoaderManager().initLoader(12, null,  this);
+                getActivity().getSupportLoaderManager().initLoader(12, null,  this);*/
                 break;
             case 1:
                 break;
@@ -186,6 +201,21 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemSelec
         }
 
 
+    }
+    void logCursor(Cursor c) {
+        if (c != null) {
+            if (c.moveToFirst()) {
+                String str;
+                do {
+                    str = "";
+                    for (String cn : c.getColumnNames()) {
+                        str = str.concat(cn + " = " + c.getString(c.getColumnIndex(cn)) + "; ");
+                    }
+                    Log.d(LOG_TAG, str);
+                } while (c.moveToNext());
+            }
+        } else
+            Log.d(LOG_TAG, "Cursor is null");
     }
 
     @Override
